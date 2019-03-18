@@ -7,3 +7,16 @@
       - virt-v2v
       - v2v-conversion-host-wrapper
     state: "{{ v2v_yum_check }}"
+
+- name: Check if virt-v2v-wrapper is installed
+  stat:
+    path: /usr/bin/virt-v2v-wrapper.py
+  register: wrapper_file
+  changed_when: false
+
+- name: Install v2v-conversion-host-wrapper if wrapper is absent
+  yum:
+    name: v2v-conversion-host-wrapper
+    state: "{{ v2v_yum_check }}"
+  when:
+    - "not wrapper_file.stat.exists"
